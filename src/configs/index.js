@@ -16,7 +16,7 @@ app.get(API_URI, (req, res) => {
 mongoose.connect('mongodb://localhost:27017/safetydriveconnect')
   .then(() => {
     console.log("Database connected successfully");
-    const PORT = process.env.PORT || 5001;
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}....`);
     });
