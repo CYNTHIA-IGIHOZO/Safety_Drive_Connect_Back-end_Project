@@ -1,0 +1,13 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Safety Ride Connect",
+    "description": "API documentation for a Safety Ride Connect WebApp",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/api/v1",
+  "schemes": ["http", "https"],
+  "paths": {},
+  "definitions": {}
+}

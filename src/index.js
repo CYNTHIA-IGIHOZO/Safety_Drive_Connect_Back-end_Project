@@ -1,1 +1,0 @@
-const { app, API_URI } = require('./configs/index.js'); 
