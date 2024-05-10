@@ -4,7 +4,7 @@ import { SignUp, SignIn, ValidateOpt, ForgotPassword, ResetPassword } from '../c
 import { signUpValidations, signInValidations, otpValidation, forgotPasswordValidation, resetPasswordValidation, createProfileValidation  } from '../utils/validation.js';
 import {createProfile, updateProfile, allDrivers, createReview} from '../controllers/general.controller.js';
 import authMiddleware from '../middlewares/auth.js';
-import upload from "/Users/HP/Desktop/ABCollector/Kigali_Spotter-System/utils/uploading.js";
+import upload from "../utils/uploading.js";
 
 
 userRouter.post('/signup', signUpValidations, SignUp);
