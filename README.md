@@ -1,29 +1,24 @@
-# Kigali Spotter
+# Safety Ride Connect
 
-Have you ever struggled to find reliable and up-to-date information about attractions, restaurants, or hotels when exploring a new city?
-
-Welcome to the backend of Kigali Spotter, an innovative City Guide system designed to help users explore and uncover hidden treasures and unique experiences within Kigali. Our platform offers a fresh perspective on the city's attractions, making it easier for travellers and locals alike to discover everything this vibrant city has to offer.
-
+Welcome to the backend of Safety Ride Connect, It is a simple ride-sharing service that allows car owners to find and request a nearby car driver to help them move from point A to point B and customers with no car to get nearby car driver with car.
 
 ## Problem Statement:
 
-Travellers often face challenges in accessing reliable and up-to-date information about a city's attractions, restaurants, hotels, and shops. Existing resources may lack comprehensive listings or require extensive user-generated content, leading to frustration and time wastage for users
-
+Safety Ride Connect addresses the challenge of reliable transportation by connecting users with experienced drivers, catering to both individuals without cars and car owners seeking trustworthy drivers. The current issue lies in the difficulty of finding reliable transportation options, especially during peak times or in areas with limited public transport. Safety Ride Connect aims to provide a transparent and accountable ride-sharing service, ensuring safety, convenience, and trust for all users.
 
 ## features:
 
 User Authentication
-Explore Listings and Search and Filtering
-User Reviews
+Explore platfom and edit profile
+platform contain driver list, edit profile and emergence contact
+User Review to a driver
 Admin Dashboard
 
-### How It Works:
-Users visit the website and are greeted with a user-friendly interface showcasing categories such as attractions, restaurants, hotels, and shops.
+### How user part Works:
+Users visit the website and are greeted with a user-friendly interface showcasing about us, what we do and signup and login for existing user option.
 
-They can browse listings within each category, view detailed information, including addresses, contact details, and reviews, and use search and filtering options to find specific listings.
+They can signup, verfy account and login, , after loging they access the platform including driver list, edit profile and emergence contact.
+User can edit the profile to become a driver and user can see more of driver from the list to book ride, leave reviews and ratings based on their experiences, helping fellow user make informed decisions.
 
-Users can leave reviews and ratings for listings based on their experiences, helping fellow travellers make informed decisions.
-
-Social media integration allows users to share their favourite listings with friends and followers, increasing the directory's visibility and engagement.
 
 
