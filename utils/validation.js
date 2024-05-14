@@ -28,10 +28,10 @@ export const otpValidation = [
     body("otp", "Otp must be provided").not().isEmpty(),
 ];
 export const createProfileValidation = [ 
-    body("fullName", "Full Name is required").not().isEmpty(),
-    body("PhoneNumber", "PhoneNumber is required").not().isEmpty(),
-    body("location", "location is required").not().isEmpty(),
-    body("cost", "cost is required").not().isEmpty(),
-    body("drivingLesence", "DrivingLesence is required").not().isEmpty,
-    body("image urL", "image is required").not().isEmpty(),
-];
+    
+    body("phoneNumber", "PhoneNumber is required").not().isEmpty(),
+    body("location", "Location is required").not().isEmpty(),
+    body("costPerhr", "Cost is required").not().isEmpty(),
+    body("drivingLicense", "DrivingLicense is required").not().isEmpty(), 
+    body("image url", "Image is required").not().isEmpty(), 
+]

@@ -27,6 +27,12 @@ const UserSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    role:{
+        type: String,
+        enum:["Admin", "User"],
+        required: true,
+        default: "User"
     }
 }, {
     toJSON: {

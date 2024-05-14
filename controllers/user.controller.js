@@ -35,7 +35,8 @@ export const SignUp = asyncWrapper(async(req, res, next) => {
         email: req.body.email,
         otp:otp,
         expiresIn: otpExpirationDate,
-        password: hashedPassword
+        password: hashedPassword,
+        
     });
 
     const savedUser = await newUser.save();
@@ -107,7 +108,7 @@ export const SignIn = asyncWrapper(async (req, res, next) => {
 
     // Generate token
     const token = jwt.sign(
-        { id: foundUser.id, email: foundUser.email },
+        { id: foundUser.id, email: foundUser.email,role: foundUser.role},
         process.env.JWT_SECRET_KEY, // Ensure this is correctly configured in your environment
         { expiresIn: "1h" });
 

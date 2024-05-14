@@ -3,21 +3,21 @@
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user.model.js';
 
-// export const requireAdmin = (req, res, next) => {
-//     if (req.user && req.user.role === 'admin') {
-//         next(); // Allow admin access
-//     } else {
-//         res.status(403).json({ message: 'Admin access required.' });
-//     }
-// };
+export const requireAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next(); // Allow admin access
+    } else {
+        res.status(403).json({ message: 'Admin access required.' });
+    }
+};
 
-// export const requireUser = (req, res, next) => {
-//     if (req.user && req.user.role === 'user') {
-//         next(); // Allow user access
-//     } else {
-//         res.status(403).json({ message: 'User access required.' });
-//     }
-// };
+export const requireUser = (req, res, next) => {
+    if (req.user && req.user.role === 'user') {
+        next(); // Allow user access
+    } else {
+        res.status(403).json({ message: 'User access required.' });
+    }
+};
 
 
 const authMiddleware = async (req, res, next) => {

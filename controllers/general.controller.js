@@ -1,11 +1,12 @@
 import UserModel from "../models/user.model.js";
 import configrations from '../configs/index.js'
 //import { requireAdmin } from "../middlewares/auth.js";
-//import { requireUser } from "../middlewares/auth.js";
+import { requireUser } from "../middlewares/auth.js";
 import { BadRequestError } from "../errors/index.js";
 import { UnauthorizedError } from "../errors/index.js";
 import { validationResult } from "express-validator";
 import path from "path"
+import authMiddleware from '../middlewares/auth.js'
 
 
 import Profile from '../models/profile.model.js';
@@ -14,23 +15,32 @@ import Profile from '../models/profile.model.js';
 
 
 // createProfile function
-export const createProfile = async (req, res, next) => {
+export const createProfile = (async (req, res, next) => {
     try {
         // Check if required fields are present in the request body
-         const errors = validationResult(req);
-         if (!errors.isEmpty()) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
-         }
+        }
+
+        // Extract user ID from the logged-in user's information (assuming it's available in req.user)
+        const userId = req.user.id; 
+
+        // Assuming carId is obtained from the request body or another source
+        const carId = req.body.carId; 
 
         // Create a new profile
+        const { phoneNumber, location, costPerhr, drivingLicense, image } = req.body;
+
         const newProfile = new Profile({
-            fullName: req.body.fullName,
-            phoneNumber: req.body.phoneNumber,
-            location: req.body.location,
-            costPerhr: req.body.costPerhr,
-            drivingLicense: req.body.drivingLicense, 
-            image: req.file.filename,
-            path: req.file.path 
+            profilePicture: req.body.profilePicture, 
+            user: userId,
+            phoneNumber,
+            location,
+            costPerhr,
+            drivingLicense,
+            image,
+            car: carId,
         });
 
         // Save the profile to the database
@@ -44,8 +54,7 @@ export const createProfile = async (req, res, next) => {
         console.error(error);
         next(error); 
     }
-};
-
+});
 // updateProfile function
 export const updateProfile = async (req, res, next) => {
     try {
