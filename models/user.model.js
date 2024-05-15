@@ -15,6 +15,11 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    role:{
+        type: String,
+        enum:["Admin", "Customer", "Driver"],
+        required: true
+    },
     otp: {
         type: Number,
         required: true
@@ -27,12 +32,6 @@ const UserSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
-    },
-    role:{
-        type: String,
-        enum:["Admin", "User"],
-        required: true,
-        default: "User"
     }
 }, {
     toJSON: {

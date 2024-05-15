@@ -11,6 +11,7 @@ import { UnauthorizedError } from "../errors/index.js";
 import { validationResult } from "express-validator";
 
 export const SignUp = asyncWrapper(async(req, res, next) => {
+    try{
     // Validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -33,9 +34,10 @@ export const SignUp = asyncWrapper(async(req, res, next) => {
     const newUser = new UserModel({
         userName: req.body.userName,
         email: req.body.email,
+        role:req.body.role,
         otp:otp,
         expiresIn: otpExpirationDate,
-        password: hashedPassword,
+        password: hashedPassword
         
     });
 
@@ -44,11 +46,14 @@ export const SignUp = asyncWrapper(async(req, res, next) => {
 
      sendEmail(req.body.email, "Verify your account", `Your OTP is ${otp}`);
 
-    if (savedUser) {
-        return res.status(201).json({
-            message: "User account created!",
-            user: savedUser
-        });
+    if (!savedUser) {
+        return res.status(500).json({message:"something went wrong try again"})
+    }
+    res.status(201).json({
+        message: "User account created!",
+        user: savedUser
+    })}catch(err) {
+        console.log(err.message);
     }
 });
 

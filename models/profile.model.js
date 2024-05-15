@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
-import Car from '../models/car.model.js'
+
 
 const profileSchema = new mongoose.Schema({
     profilePicture:{
         type: String,
         required: true
     },
+  
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userModel'
@@ -32,28 +33,16 @@ const profileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    path: {
-        type: String,
-        required: false
-    },
+
     car: {
         type: Boolean,
         required: true,
-        default: false
-    },
-    carDetails: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Car'
     },
     availability:{
         type:Boolean,
         required:true,
         default: true
-    },
-    reviews: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Review'
-    }]
+    }
 });
 
 const Profile = mongoose.model('profile', profileSchema);

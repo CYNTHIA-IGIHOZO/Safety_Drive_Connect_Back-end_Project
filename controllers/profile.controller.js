@@ -1,60 +1,50 @@
-import UserModel from "../models/user.model.js";
-import configrations from '../configs/index.js'
-//import { requireAdmin } from "../middlewares/auth.js";
-import { requireUser } from "../middlewares/auth.js";
-import { BadRequestError } from "../errors/index.js";
-import { UnauthorizedError } from "../errors/index.js";
-import { validationResult } from "express-validator";
-import path from "path"
-import authMiddleware from '../middlewares/auth.js'
-
-
+import { validationResult } from 'express-validator';
 import Profile from '../models/profile.model.js';
-//import { profile } from "console";
-
-
+import upload from '../utils/uploading.js'; // Assuming this imports your file upload middleware
+import { BadRequestError } from '../errors/index.js';
+import { NotFoundError } from '../errors/index.js'; // Assuming you have a NotFoundError defined
 
 // createProfile function
-export const createProfile = (async (req, res, next) => {
+export const createProfile = async (req, res, next) => {
     try {
-        // Check if required fields are present in the request body
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+        // Handle file uploads
+        upload(req, res, async (err) => {
+            if (err) {
+                return res.status(400).json({ message: err.message });
+            }
 
-        // Extract user ID from the logged-in user's information (assuming it's available in req.user)
-        const userId = req.user.id; 
+            // Check if required fields are present in the request body
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
 
-        // Assuming carId is obtained from the request body or another source
-        const carId = req.body.carId; 
+            // Create a new profile for the driver
+            const newProfile = new Profile({
+                profilePicture: req.files['profilePicture'] ? req.files['profilePicture'][0].filename : null,
+                phoneNumber: req.body.phoneNumber,
+                location: req.body.location,
+                costPerhr: req.body.costPerhr,
+                drivingLicense: req.body.drivingLicense,
+                image: req.files['image'] ? req.files['image'][0].filename : null,
+                car: req.body.car,
+                availability: true,
+            });
 
-        // Create a new profile
-        const { phoneNumber, location, costPerhr, drivingLicense, image } = req.body;
+            // Save the profile to the database
+            const savedProfile = await newProfile.save();
 
-        const newProfile = new Profile({
-            profilePicture: req.body.profilePicture, 
-            user: userId,
-            phoneNumber,
-            location,
-            costPerhr,
-            drivingLicense,
-            image,
-            car: carId,
-        });
-
-        // Save the profile to the database
-        const savedProfile = await newProfile.save();
-
-        res.status(201).json({
-            message: 'Profile created successfully',
-            profile: savedProfile, 
+            res.status(201).json({
+                message: 'Profile created successfully',
+                profile: savedProfile,
+            });
         });
     } catch (error) {
-        console.error(error);
-        next(error); 
+        console.error(error.message);
+        next(error);
     }
-});
+};
+
 // updateProfile function
 export const updateProfile = async (req, res, next) => {
     try {
@@ -87,11 +77,11 @@ export const allDrivers = async (req, res, next) => {
 
         res.status(200).json({
             message: 'List of all Drivers',
-            drivers: drivers 
+            drivers: drivers,
         });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -107,7 +97,7 @@ export const createReview = async (req, res, next) => {
 
         // Create a new review
         const newReview = new Review({
-            user: req.user.id, 
+            user: req.user.id,
             driver: driverId,
             rating,
             comment,

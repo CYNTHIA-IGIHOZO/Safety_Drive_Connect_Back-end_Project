@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../models/user.model.js';
 
 export const requireAdmin = (req, res, next) => {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === 'Admin') {
         next(); // Allow admin access
     } else {
         res.status(403).json({ message: 'Admin access required.' });

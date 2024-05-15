@@ -5,6 +5,6 @@ const adminSchema = new mongoose.Schema({
     
     
 });
-const Admin = mongoose.model('Adim', carSchema);
+const Admin = mongoose.model('Admin', carSchema);
 
 export default Admin;
