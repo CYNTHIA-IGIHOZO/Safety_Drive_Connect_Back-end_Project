@@ -36,3 +36,10 @@ export const createProfileValidation = [
     body("drivingLicense", "DrivingLicense is required").not().isEmpty(), 
     body("image url", "Image is required").not().isEmpty(), 
 ]
+
+export const createReviewValidation = [ 
+    
+    body("driver", "Driver is required").not().isEmpty(),
+    body("rating", "Rating is required").not().isEmpty(),
+    body("comment", "Comment is required").not().isEmpty()
+]

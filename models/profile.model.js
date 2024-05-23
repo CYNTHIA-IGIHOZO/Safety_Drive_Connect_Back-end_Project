@@ -1,50 +1,64 @@
-import mongoose from 'mongoose';
+// models/profile.js
 
+import mongoose from 'mongoose';
 
 const profileSchema = new mongoose.Schema({
     profilePicture:{
         type: String,
-        required: true
+        required:false
     },
-  
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'userModel'
+        ref: 'User'
     },
     phoneNumber: {
         type: String,
-        required: true
+        required:false
     },
-    
     location: {
         type: String,
-        required: true
+        required:false
     },
     costPerhr:{
         type: String,
-        required: true
+        required:false
     },
     drivingLicense: { 
         type: String,
         enum: ['A', 'B', 'C', 'D','E'],
-        required: true
+        required:false
     },
     image: {
         type: String,
-        required: true
+        required:false
     },
-
     car: {
         type: Boolean,
-        required: true,
+        required:false,
     },
     availability:{
         type:Boolean,
         required:true,
-        default: true
+        default:false
+    },
+    Gender:{
+        type: String,
+        required:false,
+        enum:["Female", "Male", "Other"],
+        select: true
+    },
+    AddBio:{
+        type: String,
+        required:false
+    },
+    SpokenLanguages:{   
+        type: String,
+        required:false,
+        enum:["English", "French", "Swahili", "Kinyarwanda"],
+        select: true
     }
 });
 
-const Profile = mongoose.model('profile', profileSchema);
+const Profile = mongoose.model('Profile', profileSchema);
 
 export default Profile;

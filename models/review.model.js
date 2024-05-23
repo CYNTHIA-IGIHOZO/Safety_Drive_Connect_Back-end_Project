@@ -1,16 +1,18 @@
+// models/review.js
+
 import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: false,
-    },
-    driver: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Driver',
         required: true,
     },
+    // driver: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Profile',
+    //     required: true,
+    // },
     rating: {
         type: Number,
         required: true,
@@ -21,10 +23,9 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
+    
+},{
+    timestamps:true
 });
 
 const Review = mongoose.model('Review', reviewSchema);

@@ -1,46 +1,59 @@
 import { validationResult } from 'express-validator';
 import Profile from '../models/profile.model.js';
-import upload from '../utils/uploading.js'; // Assuming this imports your file upload middleware
+
 import { BadRequestError } from '../errors/index.js';
-import { NotFoundError } from '../errors/index.js'; // Assuming you have a NotFoundError defined
+import { NotFoundError } from '../errors/index.js'; 
+import dotenv from "dotenv";
+dotenv.config();
+import cloudinary from "cloudinary";
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+  });
 
 // createProfile function
 export const createProfile = async (req, res, next) => {
+
     try {
-        // Handle file uploads
-        upload(req, res, async (err) => {
-            if (err) {
-                return res.status(400).json({ message: err.message });
-            }
+        const { drivingLicense, ...otherFields } = req.body;
+        if (!req.files || !("profilePicture" in req.files) ||!("image" in req.files)) {
+          return res.json({ message: "err" });
+        }
+        const dateNow = Date.now();
+        const ProfilePicture = `${drivingLicense}_profilePicture_${dateNow}`;
+        const image = `${drivingLicense}_image_${dateNow}`;
 
-            // Check if required fields are present in the request body
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+        const profileP = await cloudinary.v2.uploader.upload(
+          req.files.profilePicture[0].path,
+          {
+            folder: "uploads",
+            public_id: ProfilePicture,
+          }
+        );
+        const profileI = await cloudinary.v2.uploader.upload(
+            req.files.image[0].path,
+            {
+              folder: "uploads",
+              public_id: image,
             }
+          );
 
-            // Create a new profile for the driver
-            const newProfile = new Profile({
-                profilePicture: req.files['profilePicture'] ? req.files['profilePicture'][0].filename : null,
-                phoneNumber: req.body.phoneNumber,
-                location: req.body.location,
-                costPerhr: req.body.costPerhr,
-                drivingLicense: req.body.drivingLicense,
-                image: req.files['image'] ? req.files['image'][0].filename : null,
-                car: req.body.car,
-                availability: true,
-            });
 
             // Save the profile to the database
-            const savedProfile = await newProfile.save();
+            const savedProfile = await Profile.create({
+                profilePicture:profileP.secure_url,
+                image:profileI.secure_url,
+                ...otherFields
+            });
 
             res.status(201).json({
                 message: 'Profile created successfully',
                 profile: savedProfile,
             });
-        });
+        
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         next(error);
     }
 };
@@ -85,33 +98,3 @@ export const allDrivers = async (req, res, next) => {
     }
 };
 
-// createReview function
-export const createReview = async (req, res, next) => {
-    try {
-        const { driverId, rating, comment } = req.body;
-
-        // Check if required fields are present
-        if (!driverId || !rating || !comment) {
-            throw new BadRequestError('Missing required fields');
-        }
-
-        // Create a new review
-        const newReview = new Review({
-            user: req.user.id,
-            driver: driverId,
-            rating,
-            comment,
-        });
-
-        // Save the review to the database
-        const savedReview = await newReview.save();
-
-        res.status(201).json({
-            message: 'Review created successfully',
-            review: savedReview,
-        });
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-};
