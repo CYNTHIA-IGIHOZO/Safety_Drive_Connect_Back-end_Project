@@ -1,29 +1,26 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/user.model.js';
-import configuration from '../configs/index.js';
-
-const authorizeRoles = (allowedRoles) => {
+import dotenv from 'dotenv';
+dotenv.config()
+export const authorizeRoles = (roles) => {
     return async (req, res, next) => {
         try {
-            const token = req.headers.authorization.split(' ')[1];
+            const authHeader = req.headers.authorization;
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                return res.status(401).json({ message: "No token provided" });
+            }
+
+            const token = authHeader.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-            const user = await User.findById(decoded.id);
-            if (!user) {
-                return res.status(401).json({ message: 'User not found.' });
+            req.user = decoded;
+
+            if (!roles.includes(req.user.role)) {
+                return res.status(403).json({ message: "Access denied" });
             }
 
-            // Assuming user.roles is an array of roles associated with the user
-            if (!allowedRoles.some(role => user.role.includes(role))) {
-                return res.status(403).json({ message: 'Access denied.' });
-            }
-
-            req.user = user;
             next();
-        } catch (error) {
-            console.error(error);
-            res.status(401).json({ message: 'Not authorized.' });
+        } catch (err) {
+            console.error("JWT Verification Error:", err.message);
+            return res.status(401).json({ message: "Unauthorized, token is invalid" });
         }
     };
 };
-
-export { authorizeRoles };

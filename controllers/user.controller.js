@@ -10,52 +10,58 @@ import { BadRequestError } from "../errors/index.js";
 import { UnauthorizedError } from "../errors/index.js";
 import { validationResult } from "express-validator";
 
-export const SignUp = asyncWrapper(async(req, res, next) => {
-    try{
-    // Validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(new BadRequestError(errors.array()[0].msg));
-    }
 
-    // Checking if the user is already in using the email
-    const foundUser = await UserModel.findOne({ email: req.body.email });
-    if (foundUser) {
-        return next(new BadRequestError("Email already in use"));
-    };
 
-    // Harshing the user password
-    const hashedPassword = await bcryptjs.hashSync(req.body.password, 10);
-    // Generating OTP
-    const otp = otpGenerator();
-    const otpExpirationDate = new Date().getTime() + (60 * 1000 * 5);
 
-    // Recording the user to the database
-    const newUser = new UserModel({
-        userName: req.body.userName,
-        email: req.body.email,
-        role:req.body.role,
-        otp:otp,
-        expiresIn: otpExpirationDate,
-        password: hashedPassword
+export const SignUp = asyncWrapper(async (req, res, next) => {
+    try {
+        // Validation
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return next(new BadRequestError(errors.array()[0].msg));
+        }
+
+        // Checking if the user is already in using the email
+        const foundUser = await UserModel.findOne({ email: req.body.email });
+        if (foundUser) {
+            return next(new BadRequestError("Email already in use"));
+        }
+
+        // Hashing the user password
+        const hashedPassword = bcryptjs.hashSync(req.body.password, 10);
         
-    });
+        // Generating OTP
+        const otp = otpGenerator();
+        const otpExpirationDate = new Date().getTime() + (60 * 1000 * 5);
 
-    const savedUser = await newUser.save();
-    // console.log(savedUser);
+        // Recording the user to the database
+        const newUser = new UserModel({
+            userName: req.body.userName,
+            email: req.body.email,
+            role: req.body.role,
+            otp: otp,
+            expiresIn: otpExpirationDate,
+            password: hashedPassword
+        });
 
-     sendEmail(req.body.email, "Verify your account", `Your OTP is ${otp}`);
+        const savedUser = await newUser.save();
 
-    if (!savedUser) {
-        return res.status(500).json({message:"something went wrong try again"})
-    }
-    res.status(201).json({
-        message: "User account created!",
-        user: savedUser
-    })}catch(err) {
+        sendEmail(req.body.email, "Verify your account", `Your OTP is ${otp}`);
+
+        if (!savedUser) {
+            return res.status(500).json({ message: "Something went wrong. Try again." });
+        }
+        
+        res.status(201).json({
+            message: "User account created!",
+            user: savedUser
+        });
+    } catch (err) {
         console.log(err.message);
     }
 });
+
+
 
 export const ValidateOpt = asyncWrapper(async (req, res, next) => {
     // Validation
@@ -110,18 +116,25 @@ export const SignIn = asyncWrapper(async (req, res, next) => {
     if (!isPasswordVerfied) {
         return next(new BadRequestError("Invalid email or password!"));
     }
-
+console.log(process.env.JWT_SECRET_KEY)
     // Generate token
     const token = jwt.sign(
-        { id: foundUser.id, email: foundUser.email,role: foundUser.role},
-        process.env.JWT_SECRET_KEY, // Ensure this is correctly configured in your environment
-        { expiresIn: "1h" });
-
+        { id: foundUser.id, email: foundUser.email, role: foundUser.role },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "1h" }
+    );
+    
+    console.log("Generated Token:", token);
+    if (token.split('.').length !== 3) {
+        console.error("Invalid JWT Token Format:", token);
+    }
+    
     res.status(200).json({
         message: "User logged in!",
         token: token,
         user: foundUser
     });
+    
 });
     
 
