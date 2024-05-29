@@ -907,7 +907,22 @@
           }
         },
         "required": ["message"]
-      }
+      },
+      "service":{
+        "type":"object",
+        "properties": {
+          "name":{
+            "type": "string",
+            "example":"Driving student to school service"
+          },
+          "description":{
+            "type": "string",
+            "example": "We take student from and to school "
+          }
+      },
+      "required": ["name", "description"]
+    }
+      
     }
   }
 }

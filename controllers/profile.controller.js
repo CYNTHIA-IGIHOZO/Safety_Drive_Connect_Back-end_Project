@@ -14,12 +14,12 @@ cloudinary.v2.config({
 // createProfile function
 export const createProfile = async (req, res, next) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user;
         const existingProfile = await Profile.findOne({ user: userId });
 
-        if (existingProfile) {
-            return res.status(400).json({ message: "Profile already exists for this user." });
-        }
+        // if (existingProfile) {
+        //     return res.status(400).json({ message: "Profile already exists for this user." });
+        // }
 
         const { drivingLicense, ...otherFields } = req.body;
         if (!req.files || !("profilePicture" in req.files) || !("image" in req.files)) {
@@ -54,10 +54,10 @@ export const createProfile = async (req, res, next) => {
 
         res.status(201).json({
             message: 'Profile created successfully',
-            user: {
-                name: req.user.userName,
-                email: req.user.email
-            },
+            // user: {
+            //     name: req.user.userName,
+            //     email: req.user.email
+            // },
             profile: savedProfile
         });
     } catch (error) {
@@ -96,10 +96,6 @@ export const allProfiles = async (req, res, next) => {
         const profiles = await Profile.find();
         res.status(200).json({
             message: 'List of all profiles',
-            user: {
-                name: req.user.userName,
-                email: req.user.email
-            },
             profiles: profiles
         });
     } catch (err) {
@@ -121,10 +117,10 @@ export const getProfileById = async (req, res, next) => {
 
         res.status(200).json({
             message: 'Profile retrieved successfully',
-            user: {
-                name: req.user.userName,
-                email: req.user.email
-            },
+            // user: {
+            //     name: req.user.userName,
+            //     email: req.user.email
+            // },
             profile: profile
         });
     } catch (error) {
@@ -148,11 +144,7 @@ export const deleteProfile = async (req, res, next) => {
         await Profile.findByIdAndDelete(id);
 
         res.status(200).json({
-            message: 'Profile deleted successfully',
-            user: {
-                name: req.user.userName,
-                email: req.user.email
-            }
+            message: 'Profile deleted successfully'
         });
     } catch (error) {
         console.error(error);

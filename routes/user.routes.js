@@ -22,38 +22,38 @@ userRouter.post('/forgotPassword', forgotPasswordValidation, ForgotPassword);
 userRouter.post('/resetPassword', resetPasswordValidation, ResetPassword);
 
 
-userRouter.post('/reachout',createReachout);
-userRouter.get('/newreach',authorizeRoles(['Admin']),getReachout);
-userRouter.delete('/reach/:id',authorizeRoles(['Admin']),deleteReachout)
+userRouter.post('/createReachout',createReachout);
+userRouter.get('/viewallReachout',getReachout);
+userRouter.delete('/viewReachout/:id',deleteReachout)
 
 
 
-userRouter.post('/createprofile',createProfileValidation, upload.fields([{ name: 'profilePicture', maxCount: 1 }, { name: 'image', maxCount: 1 }]),authorizeRoles(['Admin', 'Driver']),createProfile);
-userRouter.patch('/updateprofile/:id', authorizeRoles(['Admin', 'Driver']),updateProfile);
-userRouter.get('/allprofiles', authorizeRoles(['Admin']),allProfiles);
-userRouter.get('/profile/:id', authorizeRoles(['Admin', 'Driver','Customer']),getProfileById);
-userRouter.delete('/deleteprofile/:id', authorizeRoles(['Admin']),deleteProfile);
+userRouter.post('/createprofile',createProfileValidation, upload.fields([{ name: 'profilePicture', maxCount: 1 }, { name: 'image', maxCount: 1 }]),createProfile);
+userRouter.patch('/updateprofile/:id',updateProfile);
+userRouter.get('/allprofiles',allProfiles);
+userRouter.get('/profile/:id',getProfileById);
+userRouter.delete('/deleteprofile/:id',deleteProfile);
 userRouter.get('/viewProfile/:id',reviewController.viewProfile);
 
 
-userRouter.post('/createReview/:id',authorizeRoles(['Admin','Customer']),reviewController.createComment);
+userRouter.post('/createReview/:id',reviewController.createComment);
 userRouter.get('/getReview/:id',reviewController.getComments);
 userRouter.patch('/updateReview/:id', reviewController.updateComment);
 userRouter.delete('/deleteReview/:id',reviewController.deleteComment);
 
 
-userRouter.post('/service',authorizeRoles(['Admin']),createService);
-userRouter.get('/allservices',getAllServices);
-userRouter.get('/service/:id',getServiceById);
-userRouter.patch('/service/:id',authorizeRoles(['Admin']),updateServiceById);
-userRouter.delete('/service/:id',authorizeRoles(['Admin']),deleteServiceById);
+userRouter.post('/createService',createService);
+userRouter.get('/viewallService',getAllServices);
+userRouter.get('/viewService/:id',getServiceById);
+userRouter.patch('/updateService/:id',updateServiceById);
+userRouter.delete('/deleteService/:id',deleteServiceById);
 
 
 
 
 
 
-userRouter.get('/admin/allusers', authorizeRoles(['Admin']), allUsers);
-userRouter.delete('/admin/delete/:id',authorizeRoles(['Admin']),deleteUsers);
+userRouter.get('/admin/allusers', allUsers);
+userRouter.delete('/admin/delete/:id',deleteUsers);
 
 export default userRouter;
