@@ -12,10 +12,6 @@ const profileSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
     phoneNumber: {
         type: String,
         required: false

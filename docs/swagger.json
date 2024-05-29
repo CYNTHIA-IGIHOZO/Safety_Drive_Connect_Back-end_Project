@@ -31,7 +31,7 @@
       "description": "Endpoints related to reachout operations"
     }
   ],
-  "paths": {
+   "paths": {
     "/signup": {
       "post": {
         "tags": ["Authorization"],
@@ -53,7 +53,41 @@
           "400": {
             "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/verify": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Verify user via OTP",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerification"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User verified successfully"
+          },
+          "401": {
+            "description": "Verification Failed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/signin": {
@@ -77,31 +111,12 @@
           "400": {
             "description": "Bad Request"
           }
-        }
-      }
-    },
-    "/verify": {
-      "post": {
-        "tags": ["Authorization"],
-        "summary": "Verify user via OTP",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OtpVerification"
-              }
-            }
-          }
         },
-        "responses": {
-          "201": {
-            "description": "User verified successfully"
-          },
-          "401": {
-            "description": "Unauthorized"
+        "security": [
+          {
+            "bearerAuth": []
           }
-        }
+        ]
       }
     },
     "/forgotPassword": {
@@ -125,7 +140,12 @@
           "400": {
             "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/resetPassword": {
@@ -149,82 +169,99 @@
           "400": {
             "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/createprofile": {
-      "post": {
-        "tags": ["Driver"],
-        "summary": "Create a new profile",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "profilePicture": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Profile picture"
-                  },
-                  "phoneNumber": {
-                    "type": "string",
-                    "description": "The driver phone number"
-                  },
-                  "location": {
-                    "type": "string",
-                    "description": "The driver location"
-                  },
-                  "costPerhr": {
-                    "type": "string",
-                    "description": "Cost the driver charges per hour"
-                  },
-                  "drivingLicense": {
-                    "type": "string",
-                    "description": "The driver license"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "The license photo"
-                  },
-                  "car": {
-                    "type": "string",
-                    "description": "Does the driver have a car"
-                  },
-                  "availability": {
-                    "type": "string",
-                    "description": "Is the driver available"
-                  },
-                  "Gender": {
-                    "type": "string",
-                    "description": "The driver's gender"
-                  },
-                  "AddBio": {
-                    "type": "string",
-                    "description": "The driver's bio"
-                  },
-                  "SpokenLanguage": {
-                    "type": "string",
-                    "description": "The driver's spoken language"
+      "/createprofile": {
+          "post": {
+            "tags": ["Driver"],
+            "summary": "Create a new profile",
+            "requestBody": {
+              "required": true,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "profilePicture": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Profile picture"
+                      },
+                      "phoneNumber": {
+                        "type": "string",
+                        "description": "The driver's phone number"
+                      },
+                      "location": {
+                        "type": "string",
+                        "description": "The driver's location"
+                      },
+                      "costPerhr": {
+                        "type": "string",
+                        "description": "Cost the driver charges per hour"
+                      },
+                      "drivingLicense": {
+                        "type": "string",
+                        "enum": ["A", "B", "C", "D", "E"],
+                        "description": "The driver's driving license category"
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "The license photo"
+                      },
+                      "car": {
+                        "type": "boolean",
+                        "description": "Does the driver have a car"
+                      },
+                      "availability": {
+                        "type": "boolean",
+                        "description": "Is the driver available"
+                      },
+                      "Gender": {
+                        "type": "string",
+                        "enum": ["Female", "Male", "Other"],
+                        "description": "The driver's gender"
+                      },
+                      "AddBio": {
+                        "type": "string",
+                        "description": "The driver's bio"
+                      },
+                      "SpokenLanguages": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["English", "French", "Swahili", "Kinyarwanda"]
+                        },
+                        "description": "The languages spoken by the driver"
+                      }
+                    },
+                    "required": ["phoneNumber", "location", "costPerhr", "drivingLicense", "availability", "Gender"]
                   }
-                },
-                "required": ["phoneNumber", "location", "costPerhr", "drivingLicense", "availability", "Gender"]
+                }
               }
-            }
+            },
+            "responses": {
+              "201": {
+                "description": "Profile created successfully"
+              },
+              "400": {
+                "description": "Bad Request"
+              }
+            },
+            "security": [
+              {
+                "bearerAuth": []
+              }
+            ]
           }
         },
-        "responses": {
-          "201": {
-            "description": "Profile created successfully"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
+    
     "/updateprofile/{id}": {
       "patch": {
         "tags": ["Driver"],
@@ -256,7 +293,12 @@
           "400": {
             "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/allprofiles": {
@@ -270,7 +312,12 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/profile/{id}": {
@@ -294,7 +341,12 @@
           "404": {
             "description": "Profile not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/deleteprofile/{id}": {
@@ -318,7 +370,12 @@
           "404": {
             "description": "Profile not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/viewProfile/{id}": {
@@ -342,7 +399,12 @@
           "404": {
             "description": "Profile not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/createReview/{id}": {
@@ -376,7 +438,12 @@
           "400": {
             "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/viewReview/{id}": {
@@ -400,7 +467,12 @@
           "404": {
             "description": "Review not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/updateReview/{id}": {
@@ -434,7 +506,12 @@
           "400": {
             "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/deleteReview/{id}": {
@@ -458,7 +535,12 @@
           "404": {
             "description": "Review not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/createReachout": {
@@ -694,20 +776,34 @@
       "UserSignUp": {
         "type": "object",
         "properties": {
+          "userName": {
+            "type": "string",
+            "example": "test"
+          },
           "email": {
             "type": "string",
-            "example": "test@example.com"
+            "example": "test@gmail.com"
           },
           "password": {
             "type": "string",
-            "example": "password123"
+            "example": "password"
           },
-          "confirmPassword": {
+          "role": {
             "type": "string",
-            "example": "password123"
+            "example": ["Customer", "Driver"]
           }
         },
-        "required": ["email", "password", "confirmPassword"]
+        "required": ["email", "password", "role"]
+      },
+      "OtpVerification": {
+        "type": "object",
+        "properties": {
+          "otp": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": ["otp"]
       },
       "UserSignIn": {
         "type": "object",
@@ -722,20 +818,6 @@
           }
         },
         "required": ["email", "password"]
-      },
-      "OtpVerification": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "example": "test@example.com"
-          },
-          "otp": {
-            "type": "string",
-            "example": "123456"
-          }
-        },
-        "required": ["email", "otp"]
       },
       "ForgotPassword": {
         "type": "object",
@@ -806,7 +888,7 @@
         "type": "object",
         "properties": {
           "rating": {
-            "type": "integer",
+            "type": "integer 1-5",
             "example": 5
           },
           "comment": {
