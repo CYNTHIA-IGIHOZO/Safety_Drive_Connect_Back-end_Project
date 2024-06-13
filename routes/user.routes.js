@@ -10,6 +10,8 @@ import reviewController from '../controllers/review.controller.js';
 import authMiddleware from '../middlewares/auth.js';
 import {createService,getAllServices, getServiceById, updateServiceById, deleteServiceById} from '../controllers/service.controller.js';
 
+import { createBooking, getBooking, updateBooking, deleteBooking } from '../controllers/booking.controller.js';
+
 import {authorizeRoles} from '../middlewares/role.js'
 import multer from "multer"
 const upload = multer({dest:'uploads/'})
@@ -48,6 +50,12 @@ userRouter.get('/viewService/:id',getServiceById);
 userRouter.patch('/updateService/:id',updateServiceById);
 userRouter.delete('/deleteService/:id',deleteServiceById);
 
+
+
+userRouter.post('/booking', createBooking);
+userRouter.get('/booking/:id', getBooking);
+userRouter.put('/booking/:id', updateBooking);
+userRouter.delete('/booking/:id', deleteBooking);
 
 
 

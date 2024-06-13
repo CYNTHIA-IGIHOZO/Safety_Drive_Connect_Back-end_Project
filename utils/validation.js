@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import Joi from 'joi';
 
 export const signUpValidations = [
     body("userName", "User name is required").not().isEmpty(),
@@ -43,3 +44,12 @@ export const createReviewValidation = [
     body("rating", "Rating is required").not().isEmpty(),
     body("comment", "Comment is required").not().isEmpty()
 ]
+
+export const bookingValidationSchema = Joi.object({
+    customerId: Joi.string().required(),
+    driverId: Joi.string().required(),
+    bookingTime: Joi.date().iso().required(),
+    pickupLocation: Joi.string().required(),
+    dropoffLocation: Joi.string().required(),
+    status: Joi.string().valid('confirmed', 'pending', 'cancelled').required()
+});
