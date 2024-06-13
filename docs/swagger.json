@@ -4,12 +4,12 @@
     "title": "Safety Ride connect API Documentation",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
-  "basePath": "/api/v1",
-  "schemes": ["http", "https"],
   "servers": [
     {
       "url": "http://localhost:8080/api/v1"
+    },
+    {
+      "url": "https://localhost:8080/api/v1"
     }
   ],
   "tags": [
@@ -32,6 +32,10 @@
     {
       "name": "Reachout",
       "description": "Endpoints related to reachout operations"
+    },
+    {
+      "name": "Booking",
+      "description": "Endpoints related to Booking operations"
     }
   ],
    "paths": {
@@ -772,6 +776,128 @@
           }
         ]
       }
+    },
+    "/booking": {
+      "post": {
+        "tags": ["Booking"],
+        "summary": "Book a driver",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "$ref": "#/components/schemas/Booking"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/getBooking/{id}": {
+      "get": {
+        "tags": ["Booking"],
+        "summary": "get a book by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "a booking not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/updateBooking/{id}": {
+      "patch": {
+        "tags": ["Booking"],
+        "summary": "Update an existing booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "$ref": "#/components/schemas/Booking"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking updated successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/deleteBooking/{id}": {
+      "delete": {
+        "tags": ["Booking"],
+        "summary": "Delete booking by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking deleted successfully"
+          },
+          "404": {
+            "description": "Service not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -924,6 +1050,25 @@
           }
       },
       "required": ["name", "description"]
+    },
+    "Booking":{
+      "type":"object",
+      "properties": {
+        "bookingTime":{
+          "type": "Date",
+          "example":"20:00Am"
+        },
+        "pickupLocation":{
+          "type": "string",
+          "example": "Kibagabaga,Road,GateNo"
+        },
+        "dropoffLocation":{
+          "type": "string",
+          "example": "Kibagabaga,Road,GateNo"
+        }
+
+      },
+      "required":["bookingTime", "pickupLocation", "dropoffLocation"]
     }
       
     }

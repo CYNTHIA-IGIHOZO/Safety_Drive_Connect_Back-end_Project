@@ -53,9 +53,9 @@ userRouter.delete('/deleteService/:id',deleteServiceById);
 
 
 userRouter.post('/booking', createBooking);
-userRouter.get('/booking/:id', getBooking);
-userRouter.put('/booking/:id', updateBooking);
-userRouter.delete('/booking/:id', deleteBooking);
+userRouter.get('/getBooking/:id', getBooking);
+userRouter.patch('/updateBooking/:id', updateBooking);
+userRouter.delete('/deleteBooking/:id', deleteBooking);
 
 
 
