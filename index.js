@@ -16,6 +16,15 @@ import allRouter from "./routes/user.routes.js"
 
 
 const app = express();
+const corsOptions = {
+    origin: [
+      "https://src-yh0n.onrender.com/",
+      "http://localhost:5173/ Locally",
+    ],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true,
+  };
 
 
 app.use(cors());
